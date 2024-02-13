@@ -79,6 +79,17 @@ export const likeTip = createAsyncThunk(
     }
   }
 );
+export const dislikeTip = createAsyncThunk(
+  "tip/dislikeTip",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await api.dislikeTip(id);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
 export const addCommentToTip = createAsyncThunk(
   "tip/addCommentToTip",
   async ({ id, commentData }, { rejectWithValue }) => {
@@ -118,6 +129,30 @@ export const deleteComment = createAsyncThunk(
     }
   }
 );
+export const markTipAsSuccess = createAsyncThunk(
+  "tip/markAsSuccess",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.markTipAsSuccess(id);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const markTipAsFailed = createAsyncThunk(
+  "tip/markAsFailed",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.markTipAsFailed(id);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const tipSlice = createSlice({
   name: "tip",
   initialState: {
@@ -235,6 +270,38 @@ const tipSlice = createSlice({
         ? action.payload.message
         : "Nepoznata greška";
     },
+    [dislikeTip.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [dislikeTip.fulfilled]: (state, action) => {
+      const dislikedTip = action.payload;
+
+      if (dislikedTip) {
+        const existingTipIndex = state.tips.findIndex(
+          (tip) => tip._id === dislikedTip._id
+        );
+
+        if (existingTipIndex !== -1) {
+          state.tips[existingTipIndex] = dislikedTip;
+        } else {
+          state.tips.push(dislikedTip);
+        }
+      } else {
+        console.error(
+          "Like tip error: Unexpected payload format",
+          action.payload
+        );
+      }
+
+      state.loading = false;
+      state.error = undefined;
+    },
+    [dislikeTip.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload
+        ? action.payload.message
+        : "Nepoznata greška";
+    },
     [addCommentToTip.pending]: (state, action) => {
       state.loading = true;
     },
@@ -292,35 +359,42 @@ const tipSlice = createSlice({
     [deleteComment.fulfilled]: (state, action) => {
       state.loading = false;
 
-      const { _id } = state.tip;
-
       const {
         meta: {
-          arg: { commentId },
+          arg: { tipId, commentId },
         },
       } = action;
 
-      // Provera da li _id ima vrednost koja odgovara očekivanjima
-
-      if (!state.comments[_id]) {
+      // Provera da li comments objekat za dati tip postoji
+      if (!state.comments[tipId]) {
         console.error(
-          "Comments array is undefined or null for the specified _id."
+          "Comments array is undefined or null for the specified tipId."
         );
         return;
       }
 
-      const updatedComments = state.comments[_id].filter(
+      const updatedComments = state.comments[tipId].filter(
         (comment) => comment._id !== commentId
       );
 
       state.comments = {
         ...state.comments,
-        [_id]: updatedComments,
+        [tipId]: updatedComments,
       };
     },
     [deleteComment.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
+    },
+    [markTipAsSuccess.fulfilled]: (state, action) => {
+      // Ažurirajte stanje tipa u Redux-u nakon što se uspešno označi kao uspešan
+      const updatedTip = action.payload;
+      state.tip = updatedTip; // Ovo je samo primer, ažurirajte stanje prema vašim potrebama
+    },
+    [markTipAsFailed.fulfilled]: (state, action) => {
+      // Ažurirajte stanje tipa u Redux-u nakon što se uspešno označi kao neuspešan
+      const updatedTip = action.payload;
+      state.tip = updatedTip; // Ovo je samo primer, ažurirajte stanje prema vašim potrebama
     },
   },
 });

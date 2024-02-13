@@ -16,7 +16,7 @@ import filterPretrage from "../utilis/FilterPretrage";
 const Home = () => {
   const { tips, loading } = useSelector((state) => ({ ...state.tip }));
   const dispatch = useDispatch();
-  const [currentFilter, setCurrentFilter] = useState("All");
+  const [currentFilter, setCurrentFilter] = useState("Svi");
   const [searchTerm, setSearchTerm] = useState("");
   const [tipsToShow, setTipsToShow] = useState(6);
 
@@ -61,23 +61,23 @@ const Home = () => {
           <MDBBtn
             color="light"
             rippleColor="dark"
-            onClick={() => handleFilter("All")}
+            onClick={() => handleFilter("Svi")}
           >
-            All
+            Svi
           </MDBBtn>
           <MDBBtn
             color="light"
             rippleColor="dark"
-            onClick={() => handleFilter("Active")}
+            onClick={() => handleFilter("Aktivni")}
           >
-            Active
+            Aktivni
           </MDBBtn>
           <MDBBtn
             color="light"
             rippleColor="dark"
-            onClick={() => handleFilter("Expired")}
+            onClick={() => handleFilter("Istekli")}
           >
-            Expired
+            Istekli
           </MDBBtn>
         </div>
       </div>
@@ -106,7 +106,7 @@ const Home = () => {
         </MDBRow>
         <div className="flex g-3">
           <MDBBtn color="light" rippleColor="dark" onClick={handleLoadMore}>
-            Load More
+            Učitaj više
           </MDBBtn>
         </div>
       </MDBContainer>

@@ -36,12 +36,11 @@ const Login = () => {
       try {
         const response = await dispatch(login({ formValue, navigate, toast }));
 
-        // Check if the user is verified before storing the password
         if (response && response.status === "verified") {
           if (rememberPassword) {
             const storedPassword = {
               value: password,
-              expiration: new Date().getTime() + 30 * 24 * 60 * 60 * 1000, // 30 days in the future
+              expiration: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
             };
 
             localStorage.setItem(
@@ -53,16 +52,11 @@ const Login = () => {
           }
         }
       } catch (err) {
-        // Handle errors
         console.error("Error during login:", err);
       }
     }
   };
-  useEffect(() => {
-    if (user) {
-      window.location.reload();
-    }
-  }, [user]);
+
   const onInputChange = (e) => {
     let { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
@@ -97,12 +91,9 @@ const Login = () => {
         <div className="login-wrapper">
           <img src="/logo.png" alt="Tipster logo" />
           <h5 className="register margin-top">Uloguj se se</h5>
-          <p>Welcome back! Please enter your details.</p>
+          <p>Dobro došli! Unesite vaše podatke za logovanje.</p>
           <MDBValidation onSubmit={handleSubmit} noValidate className="row g-3">
             <div className="col-md-12">
-              <label className="margin-top" htmlFor="email">
-                Vaše email:
-              </label>
               <MDBInput
                 id="formWhite"
                 label="Email"
@@ -116,12 +107,9 @@ const Login = () => {
               />
             </div>
             <div className="col-md-12">
-              <label className="margin-top" htmlFor="password">
-                Vaša šifra:
-              </label>
               <MDBInput
                 id="formWhite"
-                label="Password"
+                label="Šifra"
                 type="password"
                 value={password}
                 name="password"
@@ -163,14 +151,16 @@ const Login = () => {
           </MDBValidation>
           <MDBCardFooter>
             <Link to="/register">
-              <p className="text-center">Don't have an account ? Sign Up</p>
+              <p className="text-center">
+                Ukoliko nemate nalog, registrujte se!
+              </p>
             </Link>
           </MDBCardFooter>
         </div>
         <div className="flex-spaceB g-3">
           <div className="register-footer">
             <div className="register-copyright">
-              <p>@Tipster {currentYear}</p>
+              <p>@Besplatni Tipovi {currentYear}</p>
             </div>
           </div>
           <div className="register-copyright">

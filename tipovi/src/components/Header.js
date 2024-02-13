@@ -12,15 +12,19 @@ import {
 } from "mdb-react-ui-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../redux/features/authSlice";
+import { useLocation } from "react-router-dom";
 
 export default function Header() {
   const [showNav, setShowNav] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => ({ ...state.auth })); // postavljam usera da bude dostupan u hed komponenti
-
+  const location = useLocation();
   const handleLogout = () => {
     dispatch(setLogout());
   };
+  if (location.pathname === "/login" || location.pathname === "/register") {
+    return null;
+  }
   return (
     <MDBNavbar
       className="sticky-top"
@@ -46,20 +50,20 @@ export default function Header() {
             <div className="flex">
               <MDBNavbarItem>
                 <MDBNavbarLink active aria-current="page" href="/">
-                  <p className="header-text">Home</p>
+                  <p className="header-text">Početna</p>
                 </MDBNavbarLink>
               </MDBNavbarItem>
               {user?.result?.role === "admin" && (
                 <>
                   <MDBNavbarItem>
                     <MDBNavbarLink active aria-current="page" href="/addTips">
-                      <p className="header-text">Add tip</p>
+                      <p className="header-text">Dodaj tip</p>
                     </MDBNavbarLink>
                   </MDBNavbarItem>
                   <MDBNavbarItem>
-                    <MDBNavbarLink active aria-current="page" href="/dashboard">
+                    {/* <MDBNavbarLink active aria-current="page" href="/dashboard">
                       <p className="header-text">Dashboard</p>
-                    </MDBNavbarLink>
+                    </MDBNavbarLink> */}
                   </MDBNavbarItem>
                 </>
               )}
@@ -69,13 +73,15 @@ export default function Header() {
                 <>
                   <MDBNavbarItem>
                     <MDBNavbarLink href="#" className="header-text">
-                      <p className="header-text">Hello, {user?.result?.name}</p>
+                      <p className="header-text">
+                        Pozdrav, {user?.result?.name}
+                      </p>
                     </MDBNavbarLink>
                   </MDBNavbarItem>
                   <MDBNavbarItem>
                     <MDBNavbarLink href="/login" className="header-text logout">
                       <p className="header-text" onClick={() => handleLogout()}>
-                        Logout
+                        Izloguj se
                       </p>
                     </MDBNavbarLink>
                   </MDBNavbarItem>
@@ -83,7 +89,7 @@ export default function Header() {
               ) : (
                 <MDBNavbarItem>
                   <MDBNavbarLink href="/login" className="header-text">
-                    Login
+                    <p className="header-text">Uloguj se</p>
                   </MDBNavbarLink>
                 </MDBNavbarItem>
               )}

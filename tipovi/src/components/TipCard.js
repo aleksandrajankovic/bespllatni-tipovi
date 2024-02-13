@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBCard,
   MDBCardHeader,
@@ -6,12 +6,21 @@ import {
   MDBCardTitle,
   MDBCardText,
   MDBCardFooter,
-  MDBBtn,
 } from "mdb-react-ui-kit";
-import { useDispatch, useSelector } from "react-redux";
-import { likeTip } from "../redux/features/tipSlice";
+import { useSelector, useDispatch } from "react-redux";
 import TipModal from "./TipModal";
+import useCountdownTimer from "../utilis/CountdownTimer";
+import useTipActions from "../utilis/tipActions";
 import moment from "moment";
+import {
+  getTips,
+  deleteTip,
+  markTipAsSuccess,
+  markTipAsFailed,
+} from "../redux/features/tipSlice";
+import { toast } from "react-toastify";
+import Popup from "../utilis/updateDelete";
+import { Link } from "react-router-dom";
 
 const TipCard = ({
   description,
@@ -27,44 +36,103 @@ const TipCard = ({
   tipDate,
   _id,
   likeCount,
+  dislikeCount,
   createdAt,
   handleAddComment,
   localComments,
   handleDeleteComment,
   comment,
   setComment,
+  createdAtComment,
+  success,
+  failed,
 }) => {
   const [currentDate] = useState(new Date());
   const tipDateObj = new Date(tipDate);
   const isActive = currentDate < tipDateObj;
-  const dispatch = useDispatch();
-
   const { user } = useSelector((state) => ({ ...state.auth }));
-
-  const handleLike = () => {
-    dispatch(likeTip({ id: _id }));
-  };
+  const timeRemaining = useCountdownTimer(tipDate);
+  const { likeButton, dislikeButton } = useTipActions();
 
   const shortDescription = description.slice(0, 120);
-
   const openModal = () => setCentredModal(true);
   const closeModal = () => setCentredModal(false);
   const [centredModal, setCentredModal] = useState(false);
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getTips());
+  }, []);
+
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this tip ?")) {
+      dispatch(deleteTip({ id, toast }));
+    }
+  };
+
+  const [isSuccess, setIsSuccess] = useState(
+    localStorage.getItem(`success_${_id}`) === "true" ? true : success
+  );
+  const [isFailed, setIsFailed] = useState(
+    localStorage.getItem(`failed_${_id}`) === "true" ? true : failed
+  );
+
+  const handleSuccessChange = async () => {
+    try {
+      await dispatch(markTipAsSuccess(_id));
+      setIsSuccess(!isSuccess);
+
+      localStorage.setItem(`success_${_id}`, !isSuccess);
+      setIsFailed(false);
+
+      localStorage.removeItem(`failed_${_id}`);
+    } catch (error) {
+      console.error("Failed to mark tip as success:", error);
+    }
+  };
+
+  const handleFailedChange = async () => {
+    try {
+      await dispatch(markTipAsFailed(_id));
+      setIsFailed(!isFailed);
+
+      localStorage.setItem(`failed_${_id}`, !isFailed);
+      setIsSuccess(false);
+
+      localStorage.removeItem(`success_${_id}`);
+    } catch (error) {
+      console.error("Failed to mark tip as failed:", error);
+    }
+  };
+
   return (
     <MDBCard alignment="center" className="homeCard">
       <MDBCardHeader>
         <div>
           {isActive ? (
-            <span className="greenLabel">Active</span>
+            <span className="greenLabel">Aktivan</span>
           ) : (
-            <span className="redLabel">Expired</span>
+            <span className="redLabel">Istekao</span>
           )}
         </div>
+
         <div>
-          <img src="/dots-vertical.png" alt="" />
+          {user?.result?.role === "admin" && (
+            <img src="/dots-vertical.png" alt="Options" onClick={togglePopup} />
+          )}
         </div>
       </MDBCardHeader>
-      <MDBCardHeader className="flex-start">
+      <MDBCardHeader className="flex-spaceB">
         <div className="flex">
           <img src="/calendar.png" alt="" />{" "}
           <p className="time-text">
@@ -76,15 +144,44 @@ const TipCard = ({
           <img src="/icon.png" alt="" />{" "}
           <p className="time-text">
             {" "}
-            {` ${moment(createdAt).format("HH:mm")}`}
+            {timeRemaining
+              ? `${timeRemaining.days}d ${timeRemaining.hours}h ${timeRemaining.minutes}m ${timeRemaining.seconds}s`
+              : "Utakmica je završena"}
           </p>
         </div>
+        {user?.result?.role === "admin" && (
+          <div style={{ position: "relative" }}>
+            {isPopupOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  right: "50%",
+                  zIndex: 999,
+                  bottom: "-70px",
+                }}
+              >
+                <Popup>
+                  <div className="flex popup-text">
+                    <img src="/user-01.png" alt="" />
+                    <a href="#" onClick={() => handleDelete(_id)}>
+                      Izbriši
+                    </a>
+                  </div>
+                  <div className="flex popup-text">
+                    <img src="/settings-01.png" alt="" />
+                    <Link to={`/editTip/${_id}`}> Ažuriraj</Link>
+                  </div>
+                </Popup>
+              </div>
+            )}
+          </div>
+        )}
       </MDBCardHeader>
       <MDBCardBody>
         <MDBCardTitle>
           <span>
             {" "}
-            {sport} - {country} -{league}
+            {sport} - {country} - {league}
           </span>
         </MDBCardTitle>
         <div className="box">
@@ -100,7 +197,7 @@ const TipCard = ({
         <div className="decription">
           <p>{shortDescription}</p>
         </div>
-        <div className="col-md-12 links">
+        <div className="col-md-12 links flex-start">
           <p>
             {" "}
             Naš tip:{" "}
@@ -118,11 +215,42 @@ const TipCard = ({
               )}
             </span>
           </p>
+          {!isActive && user?.result?.role === "admin" && (
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={isSuccess}
+                  onChange={handleSuccessChange}
+                />
+                Dobitno
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={isFailed}
+                  onChange={handleFailedChange}
+                />
+                Gubitno
+              </label>
+            </div>
+          )}
+
+          {!isActive && user?.result?.role !== "admin" && (
+            <div>
+              {(isSuccess || isFailed) && (
+                <div>
+                  {isSuccess && <img src="/CheckCircle.png" alt="success" />}
+                  {isFailed && <img src="/XCircle.png" alt="failed" />}
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <TipModal
           isActive={isActive}
           tipDate={tipDate}
-          createdAt={createdAt}
+          timeRemaining={timeRemaining}
           sport={sport}
           country={country}
           league={league}
@@ -136,44 +264,24 @@ const TipCard = ({
           handleDeleteComment={handleDeleteComment}
           comment={comment}
           likeCount={likeCount}
-          handleLike={handleLike}
+          dislikeCount={dislikeCount}
           closeModal={closeModal}
           centredModal={centredModal}
           user={user}
           setComment={setComment}
+          createdAtComment={createdAtComment}
+          isSuccess={isSuccess}
+          isFailed={isFailed}
           _id={_id}
         />
       </MDBCardBody>
       <MDBCardFooter className="flex-spaceB">
-        <div>
-          {!user && (
-            <p className="flex">
-              <img src="/thumbs-up.png" alt="" /> {likeCount}
-            </p>
-          )}
-          {user?.result?.role === "admin" && (
-            <p className="flex">
-              <img src="/thumbs-up.png" alt="" /> {likeCount}
-            </p>
-          )}
-          {user?.result?.role === "user" && (
-            <div className="flex">
-              <MDBBtn
-                onClick={handleLike}
-                style={{
-                  background: "transparent",
-                  boxShadow: "none",
-                  padding: "0px",
-                }}
-              >
-                <img src="/thumbs-up.png" alt="" />{" "}
-              </MDBBtn>
-              <p>{likeCount}</p>
-            </div>
-          )}
+        <div className="flex space-1">
+          <div>{likeButton(likeCount, _id)}</div>
+          <div>{dislikeButton(dislikeCount, _id)}</div>
         </div>
         <button onClick={openModal} className="btn-style">
-          Read more
+          Detaljnije
         </button>
       </MDBCardFooter>
     </MDBCard>

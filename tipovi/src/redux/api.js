@@ -21,9 +21,12 @@ export const deleteTip = (id) => API.delete(`/tip/${id}`);
 export const updateTip = (updatedTipData, id) =>
   API.patch(`/tip/${id}`, updatedTipData);
 export const likeTip = (id) => API.post(`/tip/${id}/like`);
+export const dislikeTip = (id) => API.post(`/tip/${id}/dislike`);
 export const getTipsByUser = (userId) => API.get(`/tip/userTips/${userId}`);
 export const addCommentToTip = (id, commentData) =>
   API.post(`/tip/${id}/comment`, commentData);
 export const getComments = (id) => API.get(`/tip/${id}/comments`);
 export const deleteComment = (id, commentId) =>
   API.delete(`/tip/${id}/comment/${commentId}`);
+export const markTipAsSuccess = (id) => API.put(`/tip/${id}/success`);
+export const markTipAsFailed = (id) => API.put(`/tip/${id}/failed`);

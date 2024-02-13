@@ -16,7 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import VerifyComponent from "./components/VerifyComponent";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { Helmet } from "react-helmet";
-import { useNavigate } from "react-router-dom";
+
 import {
   MDBContainer as Container,
   MDBRow as Row,
@@ -30,16 +30,13 @@ function App() {
   useEffect(() => {
     dispatch(setUser(user));
   }, [dispatch, user]);
-  const isLoginPage = window.location.pathname === "/login";
-  const isRegisterPage = window.location.pathname === "/register";
 
-  const showHeaderAndFooter = !isLoginPage && !isRegisterPage;
   return (
     <BrowserRouter>
       <Helmet>
         <title>Besplatni Tipovi</title>
       </Helmet>
-      {showHeaderAndFooter && <Header />}
+      <Header />
       <ToastContainer position="top-right" />
       <Container fluid>
         <Row>
@@ -57,7 +54,7 @@ function App() {
           </Col>
         </Row>
       </Container>
-      {showHeaderAndFooter && <Footer />}
+      <Footer />
     </BrowserRouter>
   );
 }

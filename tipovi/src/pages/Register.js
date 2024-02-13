@@ -87,12 +87,9 @@ const Register = () => {
         <div className="login-wrapper">
           <img src="/logo.png" alt="Tipster logo" />
           <h5 className="register margin-top">Registruj se</h5>
-          <p>Welcome back! Please enter your details.</p>
+          <p>Dobro došli! Unesite vaše podatke za registraciju.</p>
           <MDBValidation onSubmit={handleSubmit} noValidate className="row g-3">
             <div className="col-md-12">
-              <label className="margin-top" htmlFor="firstName">
-                Vaše ime:
-              </label>
               <MDBInput
                 id="firstName"
                 label="Unesite ime"
@@ -106,9 +103,6 @@ const Register = () => {
               />
             </div>
             <div className="col-md-12">
-              <label className="margin-top" htmlFor="lastName">
-                Vaše prezime:
-              </label>
               <MDBInput
                 id="lastName"
                 label="Unesite prezime"
@@ -122,9 +116,6 @@ const Register = () => {
               />
             </div>
             <div className="col-md-12">
-              <label className="margin-top" htmlFor="email">
-                Vaše prezime:
-              </label>
               <MDBInput
                 id="email"
                 label="Email"
@@ -138,9 +129,6 @@ const Register = () => {
               />
             </div>
             <div className="col-md-12">
-              <label className="margin-top" htmlFor="password">
-                Vaša šifra:
-              </label>
               <MDBInput
                 id="password"
                 label="Unesite šifru"
@@ -154,9 +142,6 @@ const Register = () => {
               />
             </div>
             <div className="col-md-12">
-              <label className="margin-top" htmlFor="confirmPassword">
-                Potvrdite šifru:
-              </label>
               <MDBInput
                 id="confirmPassword"
                 label="Potvrdite šifru"
@@ -185,14 +170,14 @@ const Register = () => {
           </MDBValidation>
           <MDBCardFooter>
             <Link to="/login">
-              <p className="text-center">Already have an account ? Sign In</p>
+              <p className="text-center">Imate kreiran nalog ? Ulogujte se!</p>
             </Link>
           </MDBCardFooter>
         </div>
         <div className="flex-spaceB g-3">
           <div className="register-footer">
             <div className="register-copyright">
-              <p>@Tipster {currentYear}</p>
+              <p>@Besplatni Tipovi {currentYear}</p>
             </div>
           </div>
           <div className="register-copyright">

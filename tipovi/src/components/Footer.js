@@ -1,102 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import Header from "./Header";
 import {
   MDBFooter,
-  MDBContainer,
-  MDBCol,
-  MDBRow,
-  MDBIcon,
-  MDBBtn,
+  MDBNavbarNav,
+  MDBNavbarItem,
+  MDBNavbarLink,
+  MDBNavbarBrand,
+  MDBNavbar,
 } from "mdb-react-ui-kit";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setLogout } from "../redux/features/authSlice";
+import { useLocation } from "react-router-dom";
 export default function Footer() {
   const [currentYear] = useState(new Date().getFullYear());
-
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => ({ ...state.auth })); // postavljam usera da bude dostupan u hed komponenti
+  const location = useLocation();
+  const handleLogout = () => {
+    dispatch(setLogout());
+  };
+  if (location.pathname === "/login" || location.pathname === "/register") {
+    return null;
+  }
   return (
-    <MDBFooter
-      className="text-center text-white"
-      style={{ backgroundColor: "#1c2f38" }}
-    >
-      <MDBContainer className="pt-4">
-        <section className="mb-4">
-          <MDBBtn
-            rippleColor="dark"
-            color="white"
-            floating
-            size="lg"
-            className="text-dark m-1"
-            href="#!"
-            role="button"
-          >
-            <MDBIcon fab className="fab fa-facebook-f" />
-          </MDBBtn>
+    <MDBFooter className="text-center p-5">
+      <MDBNavbarBrand href="/">
+        <img src="/logo.png" alt="Besplatni tipovi" />
+      </MDBNavbarBrand>
+      <MDBNavbar id="header" expand="lg" className="p-3">
+        <MDBNavbarNav className="flex">
+          <MDBNavbarItem>
+            <MDBNavbarLink active aria-current="page" href="/">
+              <p className="header-text">Početna</p>
+            </MDBNavbarLink>
+          </MDBNavbarItem>
 
-          <MDBBtn
-            rippleColor="dark"
-            color="white"
-            floating
-            size="lg"
-            className="text-dark m-1"
-            href="#!"
-            role="button"
-          >
-            <MDBIcon fab className="fa-twitter" />
-          </MDBBtn>
-
-          <MDBBtn
-            rippleColor="dark"
-            color="white"
-            floating
-            size="lg"
-            className="text-dark m-1"
-            href="#!"
-            role="button"
-          >
-            <MDBIcon fab className="fa-google" />
-          </MDBBtn>
-
-          <MDBBtn
-            rippleColor="dark"
-            color="white"
-            floating
-            size="lg"
-            className="text-dark m-1"
-            href="#!"
-            role="button"
-          >
-            <MDBIcon fab className="fa-instagram" />
-          </MDBBtn>
-
-          <MDBBtn
-            rippleColor="dark"
-            color="white"
-            floating
-            size="lg"
-            className="text-dark m-1"
-            href="#!"
-            role="button"
-          >
-            <MDBIcon fab className="fa-linkedin" />
-          </MDBBtn>
-
-          <MDBBtn
-            rippleColor="dark"
-            color="white"
-            floating
-            size="lg"
-            className="text-dark m-1"
-            href="#!"
-            role="button"
-          >
-            <MDBIcon fab className="fa-github" />
-          </MDBBtn>
-        </section>
-      </MDBContainer>
-
-      <div className="text-center text-white p-3">
-        © {currentYear} Copyright
-        <a className="text-white" href="https://mdbootstrap.com/">
-          | Besplatni tipovi
-        </a>
+          {user?.result?._id ? (
+            <>
+              <MDBNavbarItem>
+                <MDBNavbarLink href="/login" className="header-text logout">
+                  <p className="header-text" onClick={() => handleLogout()}>
+                    Izloguj se
+                  </p>
+                </MDBNavbarLink>
+              </MDBNavbarItem>
+            </>
+          ) : (
+            <MDBNavbarItem>
+              <MDBNavbarLink href="/login" className="header-text">
+                <p className="header-text">Uloguj se</p>
+              </MDBNavbarLink>
+            </MDBNavbarItem>
+          )}
+        </MDBNavbarNav>
+      </MDBNavbar>
+      <div className="text-center copyright">
+        © {currentYear} Sva prava zadržana
       </div>
     </MDBFooter>
   );

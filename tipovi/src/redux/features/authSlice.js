@@ -14,7 +14,7 @@ export const login = createAsyncThunk(
         return rejectWithValue({ message: "Account not verified" });
       }
 
-      toast.success("Login Successfully");
+      toast.success("Uspešno ste se ulogovali!");
       navigate("/");
       return user;
     } catch (err) {
@@ -29,8 +29,7 @@ export const register = createAsyncThunk(
     try {
       console.log("Registering user...");
       const response = await api.signUp(formValue);
-      toast.success("Register Successfully");
-      // localStorage.setItem("profile", JSON.stringify({ ...response.data }));
+      toast.success("Uspešno ste se registrovali!");
       navigate("/login");
       return response.data;
     } catch (err) {

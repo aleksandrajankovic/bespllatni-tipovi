@@ -5,23 +5,38 @@ import {
   getComments,
   deleteComment,
 } from "../redux/features/tipSlice";
+import {
+  MDBModalDialog,
+  MDBModalContent,
+  MDBModalHeader,
+  MDBModalBody,
+  MDBModalFooter,
+  MDBBtn,
+} from "mdb-react-ui-kit";
+import { Link } from "react-router-dom";
+import moment from "moment";
+import "moment/locale/sr";
 
-const TipComments = ({ tipId }) => {
+const TipComments = ({ tipId, createdAtComment }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [comment, setComment] = useState("");
   const [localComments, setLocalComments] = useState([]);
   const { comments } = useSelector((state) => state.tip);
-
+  const [expandedComments, setExpandedComments] = useState([]);
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedComments, setSelectedComments] = useState([]);
+  moment.locale("sr");
   useEffect(() => {
     dispatch(getComments(tipId));
   }, [dispatch, tipId]);
 
   useEffect(() => {
-    setLocalComments(comments[tipId] || []);
+    setLocalComments(comments[tipId] ? [...comments[tipId]] : []);
   }, [comments, tipId]);
 
   const handleAddComment = async () => {
+    const now = moment();
     await dispatch(
       addCommentToTip({
         id: tipId,
@@ -30,50 +45,157 @@ const TipComments = ({ tipId }) => {
     );
     setComment("");
     setLocalComments([
+      {
+        _id: Math.random().toString(),
+        text: comment,
+        user: user?.result?.name,
+        createdAt: now,
+      },
       ...localComments,
-      { text: comment, user: user?.result?.name },
     ]);
   };
 
-  const handleDeleteComment = async (commentId) => {
-    console.log("Deleting comment with ID:", commentId);
+  const handleDeleteComment = async () => {
+    if (!selectedComments.length) {
+      console.error("No comments selected for deletion");
+      return;
+    }
+
+    console.log("Deleting selected comments:", selectedComments);
 
     try {
-      await dispatch(deleteComment({ tipId, commentId }));
-      console.log("Comment deleted successfully.");
-      setLocalComments(
-        localComments.filter((comment) => comment._id !== commentId)
+      await Promise.all(
+        selectedComments.map((commentId) =>
+          dispatch(deleteComment({ tipId, commentId }))
+        )
       );
+      console.log("Comments deleted successfully.");
+      setLocalComments(
+        localComments.filter(
+          (comment) => !selectedComments.includes(comment._id)
+        )
+      );
+      setSelectedComments([]);
+      setSelectMode(false);
     } catch (error) {
-      console.error("Error deleting comment:", error);
+      console.error("Error deleting comments:", error);
     }
   };
 
+  const toggleCommentSelection = (commentId) => {
+    if (selectedComments.includes(commentId)) {
+      setSelectedComments(selectedComments.filter((id) => id !== commentId));
+    } else {
+      setSelectedComments([...selectedComments, commentId]);
+    }
+  };
+
+  const handleSelectModeToggle = () => {
+    setSelectMode(!selectMode);
+    setSelectedComments([]);
+  };
+  const handleReadMore = (commentId) => {
+    if (!expandedComments.includes(commentId)) {
+      setExpandedComments([...expandedComments, commentId]);
+    } else {
+      setExpandedComments(expandedComments.filter((id) => id !== commentId));
+    }
+  };
   return (
-    <div className="comments-section">
-      <h5>Comments</h5>
-      {localComments.map((comment, index) => (
-        <div key={index} className="comment">
-          <p>{comment.text}</p>
-          <small>By {comment.user}</small>
-          {user?.result?.role === "admin" && (
-            <button onClick={() => handleDeleteComment(comment._id)}>
-              Delete
-            </button>
-          )}
-        </div>
-      ))}
-      {user && (
-        <>
-          <textarea
-            placeholder="Add a comment..."
+    <MDBModalDialog className="tipComments">
+      <MDBModalContent>
+        <MDBModalHeader className="flex-spaceB">
+          <h5 className="comment-delete">Komentari</h5>
+          {user?.result?.role === "admin" &&
+            (selectMode ? (
+              <MDBBtn
+                className="mx-2 comment-delete"
+                color="tertiary"
+                rippleColor="light"
+                onClick={handleDeleteComment}
+              >
+                Izbriši
+              </MDBBtn>
+            ) : (
+              <MDBBtn
+                className="mx-2 comment-delete"
+                color="tertiary"
+                rippleColor="light"
+                onClick={handleSelectModeToggle}
+              >
+                Odaberi
+              </MDBBtn>
+            ))}
+        </MDBModalHeader>
+
+        <MDBModalBody>
+          <div className="comment-container">
+            {localComments.map((comment, index) => (
+              <div key={index} className="comment">
+                <div className="flex-spaceB">
+                  <span className="flex">
+                    <img src="/UserCircle.png" alt="avatar" />
+                    <small>{comment.user}</small>
+                  </span>
+                  <p className="time-comment">
+                    {moment(comment.createdAtComment).fromNow()}
+                  </p>
+                </div>
+                <div className="comment-box">
+                  <p className="comment-text">
+                    {comment.text.length > 50
+                      ? expandedComments.includes(comment._id)
+                        ? comment.text
+                        : `${comment.text.substring(0, 50)}...`
+                      : comment.text}
+                    {comment.text.length > 50 && (
+                      <MDBBtn
+                        className="mx-2 comment-btn"
+                        color="tertiary"
+                        rippleColor="light"
+                        onClick={() => handleReadMore(comment._id)}
+                        style={{ marginLeft: "5px" }}
+                      >
+                        {expandedComments.includes(comment._id)
+                          ? "Manje"
+                          : "Više"}
+                      </MDBBtn>
+                    )}
+                  </p>
+
+                  {selectMode && (
+                    <input
+                      type="checkbox"
+                      checked={selectedComments.includes(comment._id)}
+                      onChange={() => toggleCommentSelection(comment._id)}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </MDBModalBody>
+
+        <MDBModalFooter className="flex-spaceB">
+          <input
+            className="text-field wd-80"
+            placeholder="Dodaj komentar..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            disabled={!user}
           />
-          <button onClick={handleAddComment}>Add Comment</button>
-        </>
-      )}
-    </div>
+          {user ? (
+            <button className="send-btn" onClick={handleAddComment}>
+              <img src="/send.png" alt="sendBtn" />
+            </button>
+          ) : (
+            <Link to="/login" className="btn-style disabled-link">
+              <p>Uloguj se</p>
+            </Link>
+          )}
+        </MDBModalFooter>
+      </MDBModalContent>
+    </MDBModalDialog>
   );
 };
 

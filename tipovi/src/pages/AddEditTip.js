@@ -5,7 +5,7 @@ import {
   MDBValidation,
   MDBBtn,
   MDBInput,
-  MDBIcon,
+  MDBCardTitle,
 } from "mdb-react-ui-kit";
 
 import { toast } from "react-toastify";
@@ -126,35 +126,21 @@ const AddEditTip = () => {
     <div
       style={{
         margin: "auto",
-        padding: "15px",
-        maxWidth: "450px",
+        paddingBottom: "10rem",
+        maxWidth: "40rem",
         alignContent: "center",
-        marginTop: "120px",
       }}
       className="container"
     >
-      <MDBCard
-        alignment="center"
-        style={{ background: "#1c2f38", padding: "20px" }}
-      >
-        <MDBIcon
-          fas
-          icon="chalkboard"
-          style={{ color: "#fff", fontSize: "24px", marginBottom: "10px" }}
-        />
-        <h5
-          className="blueLabel"
-          style={{ fontSize: "24px", marginBottom: "10px" }}
-        >
-          {id ? "Update Tip" : "Add Tip"}
-        </h5>
-
-        <MDBCardBody style={{ color: "#fff" }}>
+      <MDBCardTitle className="big-title">
+        {id ? "Update Tip" : "Create Tip"}
+      </MDBCardTitle>
+      <MDBCard alignment="center">
+        <MDBCardBody>
           <MDBValidation onSubmit={handleSubmit} className="row g-3" noValidate>
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Enter Title"
                 type="text"
                 value={title || ""}
@@ -169,7 +155,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Enter League"
                 type="text"
                 value={league}
@@ -185,7 +170,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Enter Country"
                 type="text"
                 value={country}
@@ -201,7 +185,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Enter Sport"
                 type="text"
                 value={sport}
@@ -217,7 +200,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Enter Rivales"
                 type="text"
                 value={rival1}
@@ -233,7 +215,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Enter Rivales"
                 type="text"
                 value={rival2}
@@ -249,7 +230,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Score Rival 1 - Home"
                 type="text"
                 value={scoreRival1}
@@ -264,7 +244,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Score Rival 2"
                 type="text"
                 value={scoreRival2}
@@ -279,7 +258,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Enter Tips and Quotes"
                 type="text"
                 value={tipsAndQuotes}
@@ -295,7 +273,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Enter Tips and Quotes Link"
                 type="text"
                 value={tipsAndQuotesLink}
@@ -308,7 +285,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 label="Enter Description of tip"
                 type="text"
                 value={description}
@@ -325,7 +301,6 @@ const AddEditTip = () => {
             <div className="col-md-12">
               <MDBInput
                 id="formWhite"
-                contrast
                 type="date"
                 value={tipDate}
                 name="tipDate"
@@ -335,17 +310,16 @@ const AddEditTip = () => {
               />
             </div>
 
-            <div className="col-12">
-              <MDBBtn style={{ width: "100%" }}>
-                {id ? "Update" : "Submit"}
-              </MDBBtn>
+            <div className="col-12 flex">
               <MDBBtn
+                className="whiteColor"
                 style={{ width: "100%" }}
-                className="mt-2"
-                color="danger"
                 onClick={handleClear}
               >
                 Clear
+              </MDBBtn>
+              <MDBBtn className="blueColor" style={{ width: "100%" }}>
+                {id ? "Update" : "Submit"}
               </MDBBtn>
             </div>
           </MDBValidation>
