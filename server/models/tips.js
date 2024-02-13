@@ -22,10 +22,26 @@ const tipsSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
+  dislikeCount: {
+    type: Number,
+    default: 0,
+  },
+  success: {
+    type: Boolean,
+    default: false,
+  },
+  failed: {
+    type: Boolean,
+    default: false,
+  },
   comments: [
     {
       user: String,
       text: String,
+      createdAtComment: {
+        type: Date,
+        default: new Date(),
+      },
     },
   ],
 });

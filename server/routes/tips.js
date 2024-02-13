@@ -9,9 +9,12 @@ import {
   getTips,
   updateTip,
   likeTip,
+  dislikeTip,
   addCommentToTip,
   getComments,
   deleteComment,
+  markAsSuccess,
+  markAsFailed,
 } from "../controllers/tips.js";
 
 router.post("/", createTip);
@@ -20,8 +23,11 @@ router.get("/:id", getTip);
 router.delete("/:id", deleteTip);
 router.patch("/:id", auth, updateTip);
 router.post("/:id/like", auth, likeTip);
+router.post("/:id/dislike", auth, dislikeTip);
 router.post("/:id/comment", addCommentToTip);
 router.get("/:id/comments", getComments);
 router.delete("/:id/comment/:commentId", deleteComment);
+router.put("/:id/success", auth, markAsSuccess);
+router.put("/:id/failed", auth, markAsFailed);
 
 export default router;

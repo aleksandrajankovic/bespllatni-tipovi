@@ -142,10 +142,31 @@ export const likeTip = async (req, res) => {
     res.status(404).json({ message: "Something went wrong" });
   }
 };
+export const dislikeTip = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: `No tip exists with id: ${id}` });
+    }
+
+    const tip = await TipsModal.findById(id);
+    const updatedTip = await TipsModal.findByIdAndUpdate(
+      id,
+      { dislikeCount: tip.dislikeCount + 1 },
+      { new: true } //vraca azurirane podatke, u slucaju false vraca se originalni podaci pre azuriranja
+    );
+
+    console.log("Updated tip:", updatedTip);
+    res.status(200).json(updatedTip);
+  } catch (error) {
+    res.status(404).json({ message: "Something went wrong" });
+  }
+};
 export const addCommentToTip = async (req, res) => {
   const { id } = req.params;
   const { user, text } = req.body;
-
+  const createdAtComment = new Date().toISOString();
   try {
     const tip = await TipsModal.findById(id);
 
@@ -153,7 +174,7 @@ export const addCommentToTip = async (req, res) => {
       return res.status(404).json({ message: "Tip not found" });
     }
 
-    const newComment = { user, text };
+    const newComment = { user, text, createdAtComment };
     tip.comments.push(newComment);
 
     const updatedTip = await tip.save();
@@ -196,5 +217,32 @@ export const deleteComment = async (req, res) => {
   } catch (error) {
     console.error("Error deleting comment:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+export const markAsSuccess = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedTip = await TipsModal.findByIdAndUpdate(
+      id,
+      { success: true, failed: false },
+      { new: true }
+    );
+    res.status(200).json(updatedTip);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const markAsFailed = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedTip = await TipsModal.findByIdAndUpdate(
+      id,
+      { success: false, failed: true },
+      { new: true }
+    );
+    res.status(200).json(updatedTip);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
   }
 };
