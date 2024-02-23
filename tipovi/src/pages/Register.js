@@ -1,3 +1,5 @@
+// Register.jsx
+
 import React, { useState, useEffect } from "react";
 import {
   MDBInput,
@@ -6,6 +8,7 @@ import {
   MDBBtn,
   MDBIcon,
   MDBSpinner,
+  MDBValidationItem,
 } from "mdb-react-ui-kit";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,7 +49,7 @@ const Register = () => {
 
     if (!passwordRegex.test(password)) {
       return toast.error(
-        "Password must have at least 12 characters, including a digit and an uppercase letter"
+        "Šifra mora da sadrži 12 karaktera, uključujući broj i veliko slovo"
       );
     }
 
@@ -63,23 +66,26 @@ const Register = () => {
     confirmPassword: true,
   });
   const onInputChange = (e) => {
-    let { name, value } = e.target;
+    const { name, value } = e.target;
     const isValid = validateField(name, value);
-    setFieldValidity({ ...fieldValidity, [name]: isValid });
+    console.log("Name:", name, "Value:", value, "isValid:", isValid);
     setFormValue({ ...formValue, [name]: value });
+    setFieldValidity({ ...fieldValidity, [name]: isValid });
   };
 
   const validateField = (fieldName, value) => {
     switch (fieldName) {
       case "email":
+        console.log("Email validation:", emailRegex.test(value));
         return emailRegex.test(value);
       case "password":
+        console.log("Password validation:", passwordRegex.test(value));
         return passwordRegex.test(value);
-
       default:
         return true;
     }
   };
+
   const [currentYear] = useState(new Date().getFullYear());
   return (
     <div className="flex full-height column">
@@ -89,7 +95,11 @@ const Register = () => {
           <h5 className="register margin-top">Registruj se</h5>
           <p>Dobro došli! Unesite vaše podatke za registraciju.</p>
           <MDBValidation onSubmit={handleSubmit} noValidate className="row g-3">
-            <div className="col-md-12">
+            <MDBValidationItem
+              className="col-md-12"
+              feedback="Unesite vaše ime"
+              invalid
+            >
               <MDBInput
                 id="firstName"
                 label="Unesite ime"
@@ -97,12 +107,15 @@ const Register = () => {
                 value={firstName}
                 name="firstName"
                 onChange={onInputChange}
-                required
-                invalid={!fieldValidity.firstName}
-                validation="Please provide first name"
+                required={true}
+                validation="Ime je obavezno polje"
               />
-            </div>
-            <div className="col-md-12">
+            </MDBValidationItem>
+            <MDBValidationItem
+              className="col-md-12"
+              feedback="Unesite vaše prezime"
+              invalid
+            >
               <MDBInput
                 id="lastName"
                 label="Unesite prezime"
@@ -110,12 +123,11 @@ const Register = () => {
                 value={lastName}
                 name="lastName"
                 onChange={onInputChange}
-                required
-                invalid={!fieldValidity.lastName}
-                validation="Please provide last name"
+                required={true}
+                validation="Prezime je obavezno polje"
               />
-            </div>
-            <div className="col-md-12">
+            </MDBValidationItem>
+            <MDBValidationItem className="col-md-12">
               <MDBInput
                 id="email"
                 label="Email"
@@ -123,12 +135,18 @@ const Register = () => {
                 value={email}
                 name="email"
                 onChange={onInputChange}
-                required
+                required={true}
+                feedback={true}
                 invalid={!fieldValidity.email}
-                validation="Please provide a valid email"
+                validation="Unesite ispravan email"
               />
-            </div>
-            <div className="col-md-12">
+            </MDBValidationItem>
+            <MDBValidationItem
+              className="col-md-12"
+              feedback="Šifra mora da sadrži 12 karaktera, uključujući broj i veliko
+                    slovo."
+              invalid={!fieldValidity.password}
+            >
               <MDBInput
                 id="password"
                 label="Unesite šifru"
@@ -136,12 +154,14 @@ const Register = () => {
                 value={password}
                 name="password"
                 onChange={onInputChange}
-                required
-                invalid={!fieldValidity.password}
-                validation="Please provide a valid password"
+                required={true}
               />
-            </div>
-            <div className="col-md-12">
+            </MDBValidationItem>
+            <MDBValidationItem
+              className="col-md-12"
+              feedback="Potvrdite sifru"
+              invalid={!fieldValidity.confirmPassword}
+            >
               <MDBInput
                 id="confirmPassword"
                 label="Potvrdite šifru"
@@ -149,11 +169,10 @@ const Register = () => {
                 value={confirmPassword}
                 name="confirmPassword"
                 onChange={onInputChange}
-                required
-                invalid={!fieldValidity.confirmPassword}
-                validation="Please provide a valid confirmation password"
+                required={true}
+                validation="Šifre se ne podudaraju"
               />
-            </div>
+            </MDBValidationItem>
             <div className="col-12">
               <MDBBtn style={{ width: "100%" }} className="mt-2 blueColor">
                 {loading && (

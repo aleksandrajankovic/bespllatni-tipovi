@@ -101,31 +101,69 @@ const TipComments = ({ tipId, createdAtComment }) => {
       setExpandedComments(expandedComments.filter((id) => id !== commentId));
     }
   };
+  const handleClearSelection = () => {
+    setSelectedComments([]);
+    setSelectMode(false);
+  };
+
+  const [selectAllComments, setSelectAllComments] = useState(false);
+
+  const handleSelectAllCommentsToggle = () => {
+    setSelectAllComments(!selectAllComments);
+    if (!selectAllComments) {
+      setSelectedComments(localComments.map((comment) => comment._id));
+    } else {
+      setSelectedComments([]);
+    }
+  };
+  const isAtLeastOneCommentSelected = () => {
+    return selectedComments.length > 0;
+  };
   return (
     <MDBModalDialog className="tipComments">
       <MDBModalContent>
         <MDBModalHeader className="flex-spaceB">
-          <h5 className="comment-delete">Komentari</h5>
-          {user?.result?.role === "admin" &&
-            (selectMode ? (
-              <MDBBtn
-                className="mx-2 comment-delete"
-                color="tertiary"
-                rippleColor="light"
-                onClick={handleDeleteComment}
-              >
-                Izbriši
-              </MDBBtn>
-            ) : (
-              <MDBBtn
-                className="mx-2 comment-delete"
-                color="tertiary"
-                rippleColor="light"
-                onClick={handleSelectModeToggle}
-              >
-                Odaberi
-              </MDBBtn>
-            ))}
+          {!selectMode && <h5 className="comment-delete">Komentari</h5>}
+          {user?.result?.role === "admin" && (
+            <>
+              {selectMode ? (
+                <>
+                  <MDBBtn
+                    className="mx-2 comment-delete"
+                    color="tertiary"
+                    rippleColor="light"
+                    onClick={handleClearSelection}
+                  >
+                    Otkaži
+                  </MDBBtn>
+                  <div className="flex-spaceB pe-2">
+                    <MDBBtn
+                      className="mx-2 comment-delete"
+                      color="tertiary"
+                      rippleColor="light"
+                      onClick={handleDeleteComment}
+                    >
+                      Izbriši
+                    </MDBBtn>
+                    <input
+                      type="checkbox"
+                      checked={selectAllComments}
+                      onChange={handleSelectAllCommentsToggle}
+                    />
+                  </div>
+                </>
+              ) : (
+                <MDBBtn
+                  className="mx-2 comment-delete"
+                  color="tertiary"
+                  rippleColor="light"
+                  onClick={handleSelectModeToggle}
+                >
+                  Opcije
+                </MDBBtn>
+              )}
+            </>
+          )}
         </MDBModalHeader>
 
         <MDBModalBody>

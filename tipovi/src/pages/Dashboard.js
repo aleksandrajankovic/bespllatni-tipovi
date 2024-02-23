@@ -48,13 +48,13 @@ const Dashboard = () => {
             className="text-center mb-5 "
             tag="h2"
           >
-            Welcome, {user?.result?.name}
+            Dobrodošli, {user?.result?.name}
           </MDBTypography>
         </MDBRow>
 
         {tips.length === 0 ? (
           <MDBTypography className="text-center mb-0" tag="h2">
-            No Tips Found
+            Nema pronađenih tipova
           </MDBTypography>
         ) : (
           <MDBContainer>

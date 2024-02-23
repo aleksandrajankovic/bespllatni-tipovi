@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   MDBCard,
   MDBCardHeader,
@@ -21,6 +21,7 @@ import {
 import { toast } from "react-toastify";
 import Popup from "../utilis/updateDelete";
 import { Link } from "react-router-dom";
+import { Tooltip } from "react-tooltip";
 
 const TipCard = ({
   description,
@@ -115,6 +116,21 @@ const TipCard = ({
     }
   };
 
+  const popupRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setIsPopupOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [popupRef]);
+
   return (
     <MDBCard alignment="center" className="homeCard">
       <MDBCardHeader>
@@ -132,7 +148,7 @@ const TipCard = ({
           )}
         </div>
       </MDBCardHeader>
-      <MDBCardHeader className="flex-spaceB">
+      <MDBCardHeader className="flex-spaceB box-position">
         <div className="flex">
           <img src="/calendar.png" alt="" />{" "}
           <p className="time-text">
@@ -145,21 +161,14 @@ const TipCard = ({
           <p className="time-text">
             {" "}
             {timeRemaining
-              ? `${timeRemaining.days}d ${timeRemaining.hours}h ${timeRemaining.minutes}m ${timeRemaining.seconds}s`
+              ? `${timeRemaining.days}d ${timeRemaining.hours}h ${timeRemaining.minutes}m`
               : "Utakmica je završena"}
           </p>
         </div>
         {user?.result?.role === "admin" && (
-          <div style={{ position: "relative" }}>
+          <div className="popup-position">
             {isPopupOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: "50%",
-                  zIndex: 999,
-                  bottom: "-70px",
-                }}
-              >
+              <div ref={popupRef}>
                 <Popup>
                   <div className="flex popup-text">
                     <img src="/user-01.png" alt="" />
@@ -171,6 +180,38 @@ const TipCard = ({
                     <img src="/settings-01.png" alt="" />
                     <Link to={`/editTip/${_id}`}> Ažuriraj</Link>
                   </div>
+                  {!isActive && user?.result?.role === "admin" && (
+                    <>
+                      <div className="flex popup-text last">
+                        <img src="/settings-01.png" alt="" />
+                        <a href="#"> Status</a>
+                      </div>
+                      <div className="success-box">
+                        <div class="checkbox-wrapper">
+                          <input
+                            type="checkbox"
+                            id="dobitnoCheckbox"
+                            checked={isSuccess}
+                            onChange={handleSuccessChange}
+                          />
+                          <label for="dobitnoCheckbox" className="flex">
+                            Dobitno
+                          </label>
+                        </div>
+                        <div class="checkbox-wrapper">
+                          <input
+                            type="checkbox"
+                            id="gubitnoCheckbox"
+                            checked={isFailed}
+                            onChange={handleFailedChange}
+                          />
+                          <label for="gubitnoCheckbox" className="flex">
+                            Gubitno
+                          </label>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </Popup>
               </div>
             )}
@@ -207,6 +248,7 @@ const TipCard = ({
                   href={tipsAndQuotesLink}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="my-anchor-element-class"
                 >
                   {tipsAndQuotes}
                 </a>
@@ -214,38 +256,33 @@ const TipCard = ({
                 { tipsAndQuotes }
               )}
             </span>
+            <Tooltip
+              anchorSelect=".my-anchor-element-class"
+              content="Posetite meridianbet.rs"
+            />
           </p>
-          {!isActive && user?.result?.role === "admin" && (
-            <div>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={isSuccess}
-                  onChange={handleSuccessChange}
-                />
-                Dobitno
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={isFailed}
-                  onChange={handleFailedChange}
-                />
-                Gubitno
-              </label>
-            </div>
-          )}
-
-          {!isActive && user?.result?.role !== "admin" && (
-            <div>
-              {(isSuccess || isFailed) && (
-                <div>
-                  {isSuccess && <img src="/CheckCircle.png" alt="success" />}
-                  {isFailed && <img src="/XCircle.png" alt="failed" />}
-                </div>
-              )}
-            </div>
-          )}
+          <div>
+            {!isActive && (
+              <div>
+                {(isSuccess || isFailed) && (
+                  <div>
+                    {isSuccess && (
+                      <div className="flex">
+                        <img src="/CheckCircle.png" alt="success" />{" "}
+                        <p style={{ color: "#17BB00" }}>Dobitan</p>
+                      </div>
+                    )}
+                    {isFailed && (
+                      <div className="flex">
+                        <img src="/XCircle.png" alt="failed" />
+                        <p style={{ color: "#D11101" }}>Gubitan</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
         <TipModal
           isActive={isActive}

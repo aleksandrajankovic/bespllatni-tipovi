@@ -58,6 +58,7 @@ const authSlice = createSlice({
     user: null,
     error: "",
     loading: false,
+    verificationMessage: "",
   },
   reducers: {
     setUser: (state, action) => {
@@ -106,6 +107,7 @@ const authSlice = createSlice({
       if (state.user) {
         state.user.status = "verified";
       }
+      state.verificationMessage = "Vaš nalog je uspešno verifikovan!";
     },
     [verifyAccount.rejected]: (state, action) => {
       state.loading = false;

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { verifyAccount } from "../redux/features/authSlice";
 
 const VerifyComponent = () => {
   let { token } = useParams();
-  const [verificationMessage, setVerificationMessage] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -13,10 +12,12 @@ const VerifyComponent = () => {
       dispatch(verifyAccount(token));
     }
   }, [dispatch, token]);
-
+  const verificationMessage = useSelector(
+    (state) => state.auth.verificationMessage
+  );
   return (
-    <div>
-      <h2>Account Verification</h2>
+    <div className="verify-box">
+      <h2>Verifikacija</h2>
       <p>{verificationMessage}</p>
     </div>
   );

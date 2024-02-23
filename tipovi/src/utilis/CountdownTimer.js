@@ -11,7 +11,7 @@ const useCountdownTimer = (tipDate) => {
       timeLeft.days = Math.floor(difference / (1000 * 60 * 60 * 24));
       timeLeft.hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
       timeLeft.minutes = Math.floor((difference / 1000 / 60) % 60);
-      timeLeft.seconds = Math.floor((difference / 1000) % 60);
+      // timeLeft.seconds = Math.floor((difference / 1000) % 60);
     } else {
       setTimeRemaining(null);
       return;

@@ -1,13 +1,11 @@
 import React from "react";
 import {
-  MDBBtn,
   MDBModal,
   MDBModalDialog,
   MDBModalContent,
   MDBModalHeader,
   MDBCardTitle,
   MDBModalBody,
-  MDBCardHeader,
   MDBModalFooter,
   MDBCardText,
 } from "mdb-react-ui-kit";
@@ -36,12 +34,17 @@ const TipModal = ({
   isSuccess,
   isFailed,
 }) => {
-  // Koristimo hook za dobijanje funkcija za lajkovanje i dislajkovanje
   const { likeButton, dislikeButton } = useTipActions();
+
+  const handleModalClick = (event) => {
+    if (event.target.classList.contains("flex-i")) {
+      closeModal();
+    }
+  };
 
   return (
     <MDBModal tabIndex="-1" show={centredModal} onHide={closeModal}>
-      <div className="flex-i">
+      <div className="flex-i" onClick={handleModalClick}>
         <MDBModalDialog>
           <MDBModalContent>
             <MDBModalHeader className="flex-spaceB">
@@ -71,7 +74,7 @@ const TipModal = ({
                     <img src="/icon.png" alt="" />{" "}
                     <p className="time-text">
                       {timeRemaining
-                        ? `${timeRemaining.days}d ${timeRemaining.hours}h ${timeRemaining.minutes}m ${timeRemaining.seconds}s`
+                        ? `${timeRemaining.days}d ${timeRemaining.hours}h ${timeRemaining.minutes}m`
                         : "Utakmica je završena"}
                     </p>
                   </div>
