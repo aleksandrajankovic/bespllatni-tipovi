@@ -20,7 +20,7 @@ import {
 router.post("/", createTip);
 router.get("/", getTips);
 router.get("/:id", getTip);
-router.delete("/:id", deleteTip);
+router.delete("/:id", auth, deleteTip);
 router.patch("/:id", auth, updateTip);
 router.post("/:id/like", auth, likeTip);
 router.post("/:id/dislike", auth, dislikeTip);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   MDBModal,
   MDBModalDialog,
@@ -9,10 +9,16 @@ import {
   MDBModalFooter,
   MDBCardText,
 } from "mdb-react-ui-kit";
+import { useSelector, useDispatch } from "react-redux";
 import TipComments from "./TipComments";
 import moment from "moment";
 import useTipActions from "../utilis/tipActions";
-
+import Popup from "../utilis/updateDelete";
+import { Link } from "react-router-dom";
+import TipStatusInfo from "../utilis/tipStatusInfo";
+import { getTips, deleteTip } from "../redux/features/tipSlice";
+import { toast } from "react-toastify";
+import { Tooltip } from "react-tooltip";
 const TipModal = ({
   isActive,
   tipDate,
@@ -35,13 +41,36 @@ const TipModal = ({
   isFailed,
 }) => {
   const { likeButton, dislikeButton } = useTipActions();
-
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const dispatch = useDispatch();
   const handleModalClick = (event) => {
     if (event.target.classList.contains("flex-i")) {
       closeModal();
     }
   };
+  const togglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+  const handleDelete = (id) => {
+    if (window.confirm("Da li ste sigurni da želite da obrišete tip ?")) {
+      dispatch(deleteTip({ id, toast }));
+    }
+  };
 
+  const popupRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setIsPopupOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [popupRef]);
   return (
     <MDBModal tabIndex="-1" show={centredModal} onHide={closeModal}>
       <div className="flex-i" onClick={handleModalClick}>
@@ -56,7 +85,7 @@ const TipModal = ({
                 )}
               </div>
               <div>
-                <img src="/dots-vertical.png" alt="" />
+                <img src="/dots-vertical.png" alt="" onClick={togglePopup} />
               </div>
             </MDBModalHeader>
 
@@ -78,6 +107,26 @@ const TipModal = ({
                         : "Utakmica je završena"}
                     </p>
                   </div>
+                  {user?.result?.role === "admin" && (
+                    <div className="popup-position">
+                      {isPopupOpen && (
+                        <div ref={popupRef}>
+                          <Popup>
+                            <div className="flex popup-text">
+                              <img src="/user-01.png" alt="" />
+                              <a href="#" onClick={() => handleDelete(_id)}>
+                                Izbriši
+                              </a>
+                            </div>
+                            <div className="flex popup-text">
+                              <img src="/settings-01.png" alt="" />
+                              <Link to={`/editTip/${_id}`}> Ažuriraj</Link>
+                            </div>
+                          </Popup>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </MDBCardTitle>
                 <MDBCardTitle>
                   <span>
@@ -93,7 +142,7 @@ const TipModal = ({
                     <MDBCardText>{rival2}</MDBCardText>
                   </div>
                 </div>
-                <div className="col-md-12 links flex-start">
+                <div className="col-md-12 links flex-start mb-2">
                   <p>
                     {" "}
                     Naš tip:{" "}
@@ -103,6 +152,7 @@ const TipModal = ({
                           href={tipsAndQuotesLink}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="my-anchor-element-class"
                         >
                           {tipsAndQuotes}
                         </a>
@@ -110,19 +160,21 @@ const TipModal = ({
                         { tipsAndQuotes }
                       )}
                     </span>
+                    <Tooltip
+                      anchorSelect=".my-anchor-element-class"
+                      content="Posetite meridianbet.rs"
+                    />
                   </p>
-                  {!isActive && user?.result?.role !== "admin" && (
-                    <div className="success-box">
-                      {(isSuccess || isFailed) && (
-                        <div>
-                          {isSuccess && (
-                            <img src="/CheckCircle.png" alt="success" />
-                          )}
-                          {isFailed && <img src="/XCircle.png" alt="failed" />}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  <div>
+                    {!isActive && (
+                      <div className="flex">
+                        <TipStatusInfo
+                          isSuccess={isSuccess}
+                          isFailed={isFailed}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <p className="decription">{description}</p>
               </div>

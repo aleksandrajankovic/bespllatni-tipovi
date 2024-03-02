@@ -7,17 +7,14 @@ import {
   MDBCardText,
   MDBCardFooter,
 } from "mdb-react-ui-kit";
+import TipStatus from "../utilis/TipStatus";
+import TipStatusInfo from "../utilis/tipStatusInfo";
 import { useSelector, useDispatch } from "react-redux";
 import TipModal from "./TipModal";
 import useCountdownTimer from "../utilis/CountdownTimer";
 import useTipActions from "../utilis/tipActions";
 import moment from "moment";
-import {
-  getTips,
-  deleteTip,
-  markTipAsSuccess,
-  markTipAsFailed,
-} from "../redux/features/tipSlice";
+import { getTips, deleteTip } from "../redux/features/tipSlice";
 import { toast } from "react-toastify";
 import Popup from "../utilis/updateDelete";
 import { Link } from "react-router-dom";
@@ -61,7 +58,6 @@ const TipCard = ({
   const [centredModal, setCentredModal] = useState(false);
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getTips());
@@ -71,12 +67,8 @@ const TipCard = ({
     setIsPopupOpen(!isPopupOpen);
   };
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this tip ?")) {
+    if (window.confirm("Da li ste sigurni da želite da obrišete tip ?")) {
       dispatch(deleteTip({ id, toast }));
     }
   };
@@ -87,34 +79,6 @@ const TipCard = ({
   const [isFailed, setIsFailed] = useState(
     localStorage.getItem(`failed_${_id}`) === "true" ? true : failed
   );
-
-  const handleSuccessChange = async () => {
-    try {
-      await dispatch(markTipAsSuccess(_id));
-      setIsSuccess(!isSuccess);
-
-      localStorage.setItem(`success_${_id}`, !isSuccess);
-      setIsFailed(false);
-
-      localStorage.removeItem(`failed_${_id}`);
-    } catch (error) {
-      console.error("Failed to mark tip as success:", error);
-    }
-  };
-
-  const handleFailedChange = async () => {
-    try {
-      await dispatch(markTipAsFailed(_id));
-      setIsFailed(!isFailed);
-
-      localStorage.setItem(`failed_${_id}`, !isFailed);
-      setIsSuccess(false);
-
-      localStorage.removeItem(`success_${_id}`);
-    } catch (error) {
-      console.error("Failed to mark tip as failed:", error);
-    }
-  };
 
   const popupRef = useRef(null);
 
@@ -181,36 +145,13 @@ const TipCard = ({
                     <Link to={`/editTip/${_id}`}> Ažuriraj</Link>
                   </div>
                   {!isActive && user?.result?.role === "admin" && (
-                    <>
-                      <div className="flex popup-text last">
-                        <img src="/settings-01.png" alt="" />
-                        <a href="#"> Status</a>
-                      </div>
-                      <div className="success-box">
-                        <div class="checkbox-wrapper">
-                          <input
-                            type="checkbox"
-                            id="dobitnoCheckbox"
-                            checked={isSuccess}
-                            onChange={handleSuccessChange}
-                          />
-                          <label for="dobitnoCheckbox" className="flex">
-                            Dobitno
-                          </label>
-                        </div>
-                        <div class="checkbox-wrapper">
-                          <input
-                            type="checkbox"
-                            id="gubitnoCheckbox"
-                            checked={isFailed}
-                            onChange={handleFailedChange}
-                          />
-                          <label for="gubitnoCheckbox" className="flex">
-                            Gubitno
-                          </label>
-                        </div>
-                      </div>
-                    </>
+                    <TipStatus
+                      isSuccess={isSuccess}
+                      isFailed={isFailed}
+                      _id={_id}
+                      setIsSuccess={setIsSuccess}
+                      setIsFailed={setIsFailed}
+                    />
                   )}
                 </Popup>
               </div>
@@ -264,22 +205,7 @@ const TipCard = ({
           <div>
             {!isActive && (
               <div>
-                {(isSuccess || isFailed) && (
-                  <div>
-                    {isSuccess && (
-                      <div className="flex">
-                        <img src="/CheckCircle.png" alt="success" />{" "}
-                        <p style={{ color: "#17BB00" }}>Dobitan</p>
-                      </div>
-                    )}
-                    {isFailed && (
-                      <div className="flex">
-                        <img src="/XCircle.png" alt="failed" />
-                        <p style={{ color: "#D11101" }}>Gubitan</p>
-                      </div>
-                    )}
-                  </div>
-                )}
+                <TipStatusInfo isSuccess={isSuccess} isFailed={isFailed} />
               </div>
             )}
           </div>
