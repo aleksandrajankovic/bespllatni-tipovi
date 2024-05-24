@@ -133,7 +133,7 @@ const AddEditTip = () => {
       className="container"
     >
       <MDBCardTitle className="big-title">
-        {id ? "Update Tip" : "Create Tip"}
+        {id ? "Ažuriraj Tip" : "Kreiraj Tip"}
       </MDBCardTitle>
       <MDBCard alignment="center">
         <MDBCardBody>
@@ -150,6 +150,7 @@ const AddEditTip = () => {
                 required
                 invalid
                 validation="Please provide title"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -165,6 +166,7 @@ const AddEditTip = () => {
                 invalid
                 rows={4}
                 validation="Please provide league"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -180,6 +182,7 @@ const AddEditTip = () => {
                 invalid
                 rows={4}
                 validation="Please provide country"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -195,6 +198,7 @@ const AddEditTip = () => {
                 invalid
                 rows={4}
                 validation="Please provide sport"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -210,6 +214,7 @@ const AddEditTip = () => {
                 invalid
                 rows={4}
                 validation="Please provide rivales"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -225,6 +230,7 @@ const AddEditTip = () => {
                 invalid
                 rows={4}
                 validation="Please provide rivales"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -239,6 +245,7 @@ const AddEditTip = () => {
                 invalid
                 rows={4}
                 validation="Please provide score"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -253,6 +260,7 @@ const AddEditTip = () => {
                 invalid
                 rows={4}
                 validation="Please provide score"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -268,6 +276,7 @@ const AddEditTip = () => {
                 invalid
                 rows={4}
                 validation="Please provide tips and quotes"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -280,6 +289,7 @@ const AddEditTip = () => {
                 onChange={onInputChange}
                 className="form-control"
                 rows={4}
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -296,6 +306,7 @@ const AddEditTip = () => {
                 textarea={true}
                 rows={4}
                 validation="Please provide description"
+                contrast
               />
             </div>
             <div className="col-md-12">
@@ -307,18 +318,19 @@ const AddEditTip = () => {
                 onChange={onInputChange}
                 className="form-control"
                 required
+                contrast
               />
             </div>
 
             <div className="col-12 flex">
               <MDBBtn
-                className="whiteColor"
+                className="me-1"
                 style={{ width: "100%" }}
                 onClick={handleClear}
               >
                 Clear
               </MDBBtn>
-              <MDBBtn className="blueColor" style={{ width: "100%" }}>
+              <MDBBtn className="me-1" style={{ width: "100%" }}>
                 {id ? "Update" : "Submit"}
               </MDBBtn>
             </div>

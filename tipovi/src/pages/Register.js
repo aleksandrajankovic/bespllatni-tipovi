@@ -31,6 +31,7 @@ const Register = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     error && toast.error(error);
@@ -109,6 +110,7 @@ const Register = () => {
                 onChange={onInputChange}
                 required={true}
                 validation="Ime je obavezno polje"
+                contrast
               />
             </MDBValidationItem>
             <MDBValidationItem
@@ -125,6 +127,7 @@ const Register = () => {
                 onChange={onInputChange}
                 required={true}
                 validation="Prezime je obavezno polje"
+                contrast
               />
             </MDBValidationItem>
             <MDBValidationItem className="col-md-12">
@@ -139,10 +142,12 @@ const Register = () => {
                 feedback={true}
                 invalid={!fieldValidity.email}
                 validation="Unesite ispravan email"
+                contrast
               />
             </MDBValidationItem>
             <MDBValidationItem
               className="col-md-12"
+              style={{ position: "relative" }}
               feedback="Šifra mora da sadrži 12 karaktera, uključujući broj i veliko
                     slovo."
               invalid={!fieldValidity.password}
@@ -150,12 +155,26 @@ const Register = () => {
               <MDBInput
                 id="password"
                 label="Unesite šifru"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 name="password"
                 onChange={onInputChange}
                 required={true}
+                contrast
               />
+              {password && (
+                <MDBIcon
+                  icon={showPassword ? "eye-slash" : "eye"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "21px",
+                    top: "9px",
+                    color: "#fff",
+                  }}
+                />
+              )}
             </MDBValidationItem>
             <MDBValidationItem
               className="col-md-12"
@@ -171,10 +190,11 @@ const Register = () => {
                 onChange={onInputChange}
                 required={true}
                 validation="Šifre se ne podudaraju"
+                contrast
               />
             </MDBValidationItem>
             <div className="col-12">
-              <MDBBtn style={{ width: "100%" }} className="mt-2 blueColor">
+              <MDBBtn style={{ width: "100%" }} className="mt-2">
                 {loading && (
                   <MDBSpinner
                     size="sm"

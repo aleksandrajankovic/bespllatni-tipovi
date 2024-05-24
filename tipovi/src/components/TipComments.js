@@ -172,7 +172,7 @@ const TipComments = ({ tipId, createdAtComment }) => {
               <div key={index} className="comment">
                 <div className="flex-spaceB">
                   <span className="flex">
-                    <img src="/UserCircle.png" alt="avatar" />
+                    <img src="/UserCircle.svg" alt="avatar" />
                     <small>{comment.user}</small>
                   </span>
                   <p className="time-comment">
@@ -224,7 +224,7 @@ const TipComments = ({ tipId, createdAtComment }) => {
           />
           {user ? (
             <button className="send-btn" onClick={handleAddComment}>
-              <img src="/send.png" alt="sendBtn" />
+              <img src="/PaperPlaneRight.svg" alt="sendBtn" />
             </button>
           ) : (
             <Link to="/login" className="btn-style disabled-link">

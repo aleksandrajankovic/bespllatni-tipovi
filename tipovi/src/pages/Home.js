@@ -56,6 +56,7 @@ const Home = () => {
           value={searchTerm}
           icon="search"
           onChange={(e) => handleSearch(e.target.value)}
+          contrast
         />
         <div className="flex">
           <MDBBtn
@@ -89,7 +90,7 @@ const Home = () => {
             </MDBTypography>
           )}
         </MDBRow>
-        <MDBRow className="row-cols-1 row-cols-md-3 g-2">
+        <MDBRow className="row-cols-1 row-cols-md-3 g-3">
           {filteredTips &&
             filteredTips
               .sort(

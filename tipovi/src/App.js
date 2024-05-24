@@ -39,7 +39,7 @@ function App() {
       <Header />
       <ToastContainer position="top-right" />
       <Container fluid>
-        <Row>
+        <Row className="containerBox">
           <Col>
             <Routes>
               <Route path="/" element={<Home />} />

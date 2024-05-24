@@ -114,14 +114,14 @@ const TipCard = ({
       </MDBCardHeader>
       <MDBCardHeader className="flex-spaceB box-position">
         <div className="flex">
-          <img src="/calendar.png" alt="" />{" "}
+          <img src="/calendar.svg" alt="" />
           <p className="time-text">
             {" "}
             {` ${moment(tipDate).format("DD.MM.YYYY")}`}
           </p>
         </div>
         <div className="flex">
-          <img src="/icon.png" alt="" />{" "}
+          <img src="/icon.svg" alt="" />
           <p className="time-text">
             {" "}
             {timeRemaining
@@ -181,8 +181,7 @@ const TipCard = ({
         </div>
         <div className="col-md-12 links flex-start">
           <p>
-            {" "}
-            Naš tip:{" "}
+            Naš tip:
             <span>
               {tipsAndQuotesLink ? (
                 <a
@@ -240,8 +239,8 @@ const TipCard = ({
       </MDBCardBody>
       <MDBCardFooter className="flex-spaceB">
         <div className="flex space-1">
-          <div>{likeButton(likeCount, _id)}</div>
-          <div>{dislikeButton(dislikeCount, _id)}</div>
+          <div className="likeCount">{likeButton(likeCount, _id)}</div>
+          <div className="likeCount">{dislikeButton(dislikeCount, _id)}</div>
         </div>
         <button onClick={openModal} className="btn-style">
           Detaljnije

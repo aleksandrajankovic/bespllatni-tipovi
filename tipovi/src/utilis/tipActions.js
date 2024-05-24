@@ -17,13 +17,13 @@ const useTipActions = () => {
   const likeButton = (likeCount, tipId) => (
     <div>
       {!user && (
-        <p className="flex">
-          <img src="/thumbs-up.png" alt="" /> {likeCount}
+        <p className="flex likeCount">
+          <img src="/Like.svg" alt="" /> {likeCount}
         </p>
       )}
       {user?.result?.role === "admin" && (
-        <p className="flex">
-          <img src="/thumbs-up.png" alt="" /> {likeCount}
+        <p className="flex likeCount">
+          <img src="/Like.svg" alt="" /> {likeCount}
         </p>
       )}
       {user?.result?.role === "user" && (
@@ -36,9 +36,9 @@ const useTipActions = () => {
               padding: "0px",
             }}
           >
-            <img src="/thumbs-up.png" alt="" />{" "}
+            <img src="/Like.svg" alt="" />{" "}
           </MDBBtn>
-          <p>{likeCount}</p>
+          <p className="likeCount">{likeCount}</p>
         </div>
       )}
     </div>
@@ -47,13 +47,13 @@ const useTipActions = () => {
   const dislikeButton = (dislikeCount, tipId) => (
     <div>
       {!user && (
-        <p className="flex">
-          <img src="/dislike.png" alt="" /> {dislikeCount}
+        <p className="flex likeCount">
+          <img src="/dislike.svg" alt="" /> {dislikeCount}
         </p>
       )}
       {user?.result?.role === "admin" && (
-        <p className="flex">
-          <img src="/dislike.png" alt="" /> {dislikeCount}
+        <p className="flex likeCount">
+          <img src="/dislike.svg" alt="" /> {dislikeCount}
         </p>
       )}
       {user?.result?.role === "user" && (
@@ -66,9 +66,9 @@ const useTipActions = () => {
               padding: "0px",
             }}
           >
-            <img src="/dislike.png" alt="" />{" "}
+            <img src="/dislike.svg" alt="" />{" "}
           </MDBBtn>
-          <p>{dislikeCount}</p>
+          <p className="likeCount">{dislikeCount}</p>
         </div>
       )}
     </div>

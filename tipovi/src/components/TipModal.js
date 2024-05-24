@@ -19,6 +19,7 @@ import TipStatusInfo from "../utilis/tipStatusInfo";
 import { getTips, deleteTip } from "../redux/features/tipSlice";
 import { toast } from "react-toastify";
 import { Tooltip } from "react-tooltip";
+import TipStatus from "../utilis/TipStatus";
 const TipModal = ({
   isActive,
   tipDate,
@@ -39,6 +40,8 @@ const TipModal = ({
   _id,
   isSuccess,
   isFailed,
+  setIsSuccess,
+  setIsFailed,
 }) => {
   const { likeButton, dislikeButton } = useTipActions();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -85,7 +88,9 @@ const TipModal = ({
                 )}
               </div>
               <div>
-                <img src="/dots-vertical.png" alt="" onClick={togglePopup} />
+                {user?.result?.role === "admin" && (
+                  <img src="/dots-vertical.png" alt="" onClick={togglePopup} />
+                )}
               </div>
             </MDBModalHeader>
 
@@ -93,14 +98,14 @@ const TipModal = ({
               <div className="bigmodal-container">
                 <MDBCardTitle className="flex-start mb-3">
                   <div className="flex">
-                    <img src="/calendar.png" alt="" />{" "}
+                    <img src="/calendar.svg" alt="" />{" "}
                     <p className="time-text">
                       {" "}
                       {` ${moment(tipDate).format("DD.MM.YYYY")}`}
                     </p>
                   </div>
                   <div className="flex">
-                    <img src="/icon.png" alt="" />{" "}
+                    <img src="/icon.svg" alt="" />{" "}
                     <p className="time-text">
                       {timeRemaining
                         ? `${timeRemaining.days}d ${timeRemaining.hours}h ${timeRemaining.minutes}m`

@@ -27,7 +27,7 @@ export default function Header() {
   }
   return (
     <MDBNavbar
-      className="sticky-top"
+      className="sticky-top headerTop"
       id="header"
       expand="lg"
       light

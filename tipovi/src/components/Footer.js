@@ -6,6 +6,7 @@ import {
   MDBNavbarLink,
   MDBNavbarBrand,
   MDBNavbar,
+  MDBCardText,
 } from "mdb-react-ui-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../redux/features/authSlice";
@@ -23,10 +24,13 @@ export default function Footer() {
   }
   return (
     <MDBFooter className="text-center p-5">
-      <MDBNavbarBrand href="/">
-        <img src="/logo.png" alt="Besplatni tipovi" />
-      </MDBNavbarBrand>
-      <MDBNavbar id="header" expand="lg" className="p-3">
+      <MDBCardText className="flex">
+        <a href="/">
+          {" "}
+          <img src="/logo.png" alt="Besplatni tipovi" />
+        </a>
+      </MDBCardText>
+      <MDBNavbar expand="lg" className="p-3">
         <MDBNavbarNav className="flex">
           <MDBNavbarItem>
             <MDBNavbarLink active aria-current="page" href="/">

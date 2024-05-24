@@ -25,7 +25,7 @@ const Login = () => {
   const { email, password, rememberPassword } = formValue;
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   useEffect(() => {
     error && toast.error(error);
   }, [error]);
@@ -104,20 +104,35 @@ const Login = () => {
                 required
                 invalid
                 validation="Unesite vašu email adresu"
+                contrast
               />
             </div>
-            <div className="col-md-12">
+            <div className="col-md-12" style={{ position: "relative" }}>
               <MDBInput
                 id="formWhite"
                 label="Šifra"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 name="password"
                 onChange={onInputChange}
                 required
                 invalid
                 validation="Unesite vašu šifru"
+                contrast
               />
+              {password && (
+                <MDBIcon
+                  icon={showPassword ? "eye-slash" : "eye"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "21px",
+                    top: "9px",
+                    color: "#fff",
+                  }}
+                />
+              )}
             </div>
             <div className="col-md-12">
               <MDBCheckbox
@@ -136,7 +151,7 @@ const Login = () => {
               />
             </div>
             <div className="col-12">
-              <MDBBtn style={{ width: "100%" }} className="mt-2 blueColor">
+              <MDBBtn style={{ width: "100%" }} className="mt-2">
                 {loading && (
                   <MDBSpinner
                     size="sm"
