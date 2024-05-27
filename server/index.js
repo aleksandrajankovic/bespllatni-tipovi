@@ -35,11 +35,11 @@ app.use(
 
 app.options("*", cors());
 
-app.use("/user", userRouter);
-app.use("/tips", tipsRouter);
+app.use("/users", userRouter);
+app.use("/tip", tipsRouter);
 
-app.options("/user", cors());
-app.options("/tips", cors());
+app.options("/users", cors());
+app.options("/tip", cors());
 
 const MONGODB_URL = process.env.MONGODB_URL;
 const PORT = process.env.PORT || 5000;
