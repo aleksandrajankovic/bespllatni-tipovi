@@ -14,8 +14,13 @@ app.use(morgan("dev"));
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
-// Konfiguriranje CORS-a
-const allowedOrigins = ["https://besplatni-tipovi.vercel.app"]; // Dodajte svoje domene ovde
+// Definiši dozvoljene origin-e
+const allowedOrigins = [
+  "https://besplatni-tipovi.vercel.app",
+  "http://localhost:3000",
+];
+
+// Postavi CORS middleware
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -25,10 +30,11 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// Setup ruta
 app.use("/users", userRouter);
 app.use("/tip", tipsRouter);
 
