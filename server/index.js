@@ -15,10 +15,7 @@ app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
 // Definiši dozvoljene origin-e
-const allowedOrigins = [
-  "https://besplatni-tipovi.vercel.app",
-  "http://localhost:3000",
-];
+const allowedOrigins = ["https://besplatni-tipovi-api.vercel.app"];
 
 // Postavi CORS middleware
 app.use(
