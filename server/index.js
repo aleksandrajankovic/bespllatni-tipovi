@@ -1,6 +1,5 @@
 import express from "express";
 import mongoose from "mongoose";
-import cors from "cors";
 import morgan from "morgan";
 import userRouter from "./routes/user.js";
 import tipsRouter from "./routes/tips.js";
@@ -13,25 +12,6 @@ const app = express();
 app.use(morgan("dev"));
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
-
-const allowedOrigins = [
-  "https://besplatni-tipovi-api.vercel.app",
-  "https://besplatni-tipovi.vercel.app",
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
 
 app.use("/users", userRouter);
 app.use("/tip", tipsRouter);
