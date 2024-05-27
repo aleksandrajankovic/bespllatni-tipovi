@@ -1,7 +1,11 @@
 import jwt from "jsonwebtoken";
 import UserModel from "../models/user.js";
+import dotenv from "dotenv";
 
-const secret = "sasndladhflflgbmsbdkdsjfkjjdbkfjbs";
+// Učitajte varijable iz .env fajla
+dotenv.config();
+
+const secret = process.env.JWT_SECRET;
 
 const auth = async (req, res, next) => {
   try {

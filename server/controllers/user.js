@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import UserModal from "../models/user.js";
 
-const secret = "sasndladhflflgbmsbdkdsjfkjjdbkfjbs"; // token
+const secret = process.env.JWT_SECRET; // token
 
 const transporter = nodemailer.createTransport({
   host: "sandbox.smtp.mailtrap.io",
@@ -42,7 +42,7 @@ export const signup = async (req, res) => {
       verificationToken, // Dodato polje za token za verifikaciju
     });
 
-    const verificationLink = `http://localhost:3000/verify/${verificationToken}`;
+    const verificationLink = `https://besplatni-tipovi.vercel.app/verify/${verificationToken}`;
 
     await transporter.sendMail({
       to: email,
