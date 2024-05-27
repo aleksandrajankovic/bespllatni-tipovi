@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://besplatni-tipovi-api.vercel.app/",
+  baseURL: "https://besplatni-tipovi-api.vercel.app",
 });
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("profile")) {
