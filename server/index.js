@@ -14,13 +14,11 @@ app.use(morgan("dev"));
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
-// Definiši dozvoljene origin-e
 const allowedOrigins = [
   "https://besplatni-tipovi-api.vercel.app",
   "https://besplatni-tipovi.vercel.app",
 ];
 
-// Postavi CORS middleware
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -35,8 +33,13 @@ app.use(
   })
 );
 
+app.options("*", cors());
+
 app.use("/users", userRouter);
 app.use("/tip", tipsRouter);
+
+app.options("/users", cors());
+app.options("/tip", cors());
 
 const MONGODB_URL = process.env.MONGODB_URL;
 const PORT = process.env.PORT || 5000;
