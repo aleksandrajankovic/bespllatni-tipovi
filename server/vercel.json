@@ -1,6 +1,23 @@
 {
   "version": 2,
-  "builds": [{ "src": "*.js", "use": "@vercel/node" }],
-
-  "routes": [{ "src": "/(.*)", "dest": "/" }]
+  "builds": [
+    {
+      "src": "server/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/tip(.*)",
+      "dest": "/server/routes/tips.js"
+    },
+    {
+      "src": "/users(.*)",
+      "dest": "/server/routes/user.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ]
 }
