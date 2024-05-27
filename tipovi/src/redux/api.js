@@ -3,6 +3,9 @@ import axios from "axios";
 const API = axios.create({
   baseURL: "https://besplatni-tipovi-api.vercel.app",
 });
+
+API.defaults.headers.post["Content-Type"] = "application/json";
+
 API.interceptors.request.use((req) => {
   if (localStorage.getItem("profile")) {
     req.headers.Authorization = `Bearer ${
