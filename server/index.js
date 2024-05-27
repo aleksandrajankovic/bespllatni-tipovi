@@ -11,12 +11,25 @@ dotenv.config();
 const app = express();
 
 app.use(morgan("dev"));
-app.use(express.json({ limit: "30mb", extended: true })); // parsiranje dolazecih json podataka
+app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+
+// Konfiguriranje CORS-a
+const allowedOrigins = ["https://besplatni-tipovi.vercel.app"]; // Dodajte svoje domene ovde
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
 
 // Setup ruta
-app.use("/users", userRouter); // http://localhost:5000/users/signup
+app.use("/users", userRouter);
 app.use("/tip", tipsRouter);
 
 const MONGODB_URL = process.env.MONGODB_URL;
