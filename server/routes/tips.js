@@ -20,14 +20,14 @@ import {
 router.post("/", createTip);
 router.get("/", getTips);
 router.get("/:id", getTip);
-router.delete("/:id", auth, deleteTip);
-router.patch("/:id", auth, updateTip);
-router.post("/:id/like", auth, likeTip);
-router.post("/:id/dislike", auth, dislikeTip);
+router.delete("/:id", deleteTip);
+router.patch("/:id", updateTip);
+router.post("/:id/like", likeTip);
+router.post("/:id/dislike", dislikeTip);
 router.post("/:id/comment", addCommentToTip);
 router.get("/:id/comments", getComments);
 router.delete("/:id/comment/:commentId", deleteComment);
-router.put("/:id/success", auth, markAsSuccess);
-router.put("/:id/failed", auth, markAsFailed);
+router.put("/:id/success", markAsSuccess);
+router.put("/:id/failed", markAsFailed);
 
 export default router;
