@@ -2,8 +2,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import UserModal from "../models/user.js";
-
-const secret = "sasndladhflflgbmsbdkdsjfkjjdbkfjbs"; // token
+import dotenv from "dotenv";
+dotenv.config();
+const secret = process.env.JWT_SECRET; // token
 
 const transporter = nodemailer.createTransport({
   host: "sandbox.smtp.mailtrap.io",
