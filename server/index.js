@@ -10,7 +10,13 @@ const app = express();
 app.use(morgan("dev"));
 app.use(express.json({ limit: "30mb", extended: true })); //parsiranje dolazecih json podataka
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://besplatni-tipovi-one.vercel.app/"],
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 
 //setup ruta
 app.use("/users", userRouter); // http://localhost:5000/users/signup
