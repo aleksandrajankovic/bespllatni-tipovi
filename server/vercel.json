@@ -24,11 +24,11 @@
       "dest": "/routes/tips.js"
     },
     {
-      "src": "/tip/(.*)/like",
+      "src": "/tip/:id/like",
       "dest": "/routes/tips.js"
     },
     {
-      "src": "/tip/(.*)/dislike",
+      "src": "/tip/:id/dislike",
       "dest": "/routes/tips.js"
     },
     {
