@@ -16,7 +16,7 @@
   ],
   "routes": [
     {
-      "src": "/users/(.*)",
+      "src": "/users",
       "dest": "/routes/user.js"
     },
     {
