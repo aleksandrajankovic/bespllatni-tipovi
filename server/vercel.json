@@ -24,6 +24,14 @@
       "dest": "/routes/tips.js"
     },
     {
+      "src": "/tip/(.*)/like",
+      "dest": "/routes/tips.js"
+    },
+    {
+      "src": "/tip/(.*)/dislike",
+      "dest": "/routes/tips.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.js"
     }
