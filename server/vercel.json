@@ -16,7 +16,7 @@
   ],
   "routes": [
     {
-      "src": "/users",
+      "src": "/users/signin",
       "dest": "/routes/user.js"
     },
     {
