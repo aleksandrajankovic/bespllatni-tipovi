@@ -16,24 +16,12 @@
   ],
   "routes": [
     {
-      "src": "/users/signup",
-      "dest": "/routes/user.js"
-    },
-    {
-      "src": "/users/signin",
-      "dest": "/routes/user.js"
-    },
-    {
-      "src": "/users/verify/:token",
+      "src": "/users",
       "dest": "/routes/user.js"
     },
     {
       "src": "/tip/(.*)",
       "dest": "/routes/tips.js"
-    },
-    {
-      "src": "/users/(.*)",
-      "dest": "/routes/user.js"
     },
     {
       "src": "/(.*)",
