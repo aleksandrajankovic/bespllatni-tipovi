@@ -4,11 +4,28 @@
     {
       "src": "index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "routes/user.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "routes/tips.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
-    { "src": "/users/(.*)", "dest": "/routes/user.js" },
-    { "src": "/tip/(.*)", "dest": "/routes/tips.js" },
-    { "src": "/(.*)", "dest": "/index.js" }
+    {
+      "src": "/users/(.*)",
+      "dest": "/routes/user.js"
+    },
+    {
+      "src": "/tip/(.*)",
+      "dest": "/routes/tips.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.js"
+    }
   ]
 }
