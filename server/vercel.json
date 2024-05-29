@@ -7,9 +7,8 @@
   ],
   "routes": [
     { "src": "/users", "dest": "/routes/user.js" },
-    { "src": "/tip/:id/like", "dest": "/routes/tips.js" },
-    { "src": "/tip/:id/dislike", "dest": "/routes/tips.js" },
-    { "src": "/tip/(.*)", "dest": "/routes/tips.js" },
+
+    { "src": "/tip/(.*)/(./*)", "dest": "/routes/tips.js" },
     { "src": "/(.*)", "dest": "/index.js" }
   ]
 }
