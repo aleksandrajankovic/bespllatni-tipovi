@@ -652,6 +652,11 @@ footer .navbar-brand {
     flex-direction: column;
     height: unset;
   }
+  .col {
+    padding-left: unset;
+    padding-right: unset;
+  }
+  .login .flex-spaceB {
+    padding: 2rem;
+  }
 }
-
-/* yapadding: 24px 16px 0px 16px*/
