@@ -637,6 +637,7 @@ footer .navbar-brand {
   .login-wrapper {
     width: 100%;
     margin: 6rem 0px;
+    padding: 2rem;
   }
   .login {
     width: 100%;
