@@ -653,10 +653,10 @@ footer .navbar-brand {
     height: unset;
   }
   .col {
-    padding-left: unset;
-    padding-right: unset;
+    padding-left: unset !important;
+    padding-right: unset !important;
   }
   .login .flex-spaceB {
-    padding: 2rem;
+    padding: 2rem !important;
   }
 }
