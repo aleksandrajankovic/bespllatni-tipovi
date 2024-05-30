@@ -109,7 +109,7 @@ const TipModal = ({
                     </p>
                   </div>
                   <div className="flex">
-                    <img src="/icon.svg" alt="Time icon" />{" "}
+                    <img src="/Icon.svg" alt="Time icon" />{" "}
                     <p className="time-text">
                       {timeRemaining
                         ? `${timeRemaining.days}d ${timeRemaining.hours}h ${timeRemaining.minutes}m`
