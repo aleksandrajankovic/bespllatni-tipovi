@@ -636,7 +636,6 @@ footer .navbar-brand {
   }
   .login-wrapper {
     width: 100%;
-    margin: 6rem 0px;
     padding: 2rem;
   }
   .login {
@@ -658,5 +657,8 @@ footer .navbar-brand {
   }
   .login .flex-spaceB {
     padding: 2rem !important;
+  }
+  .register-copyright p {
+    font-size: 12px;
   }
 }
