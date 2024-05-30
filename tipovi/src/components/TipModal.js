@@ -89,7 +89,11 @@ const TipModal = ({
               </div>
               <div>
                 {user?.result?.role === "admin" && (
-                  <img src="/dots-vertical.png" alt="" onClick={togglePopup} />
+                  <img
+                    src="/dots-vertical.png"
+                    alt="Dots icon"
+                    onClick={togglePopup}
+                  />
                 )}
               </div>
             </MDBModalHeader>
@@ -98,14 +102,14 @@ const TipModal = ({
               <div className="bigmodal-container">
                 <MDBCardTitle className="flex-start mb-3">
                   <div className="flex">
-                    <img src="/calendar.svg" alt="" />{" "}
+                    <img src="/calendar.svg" alt="Calendar icon" />{" "}
                     <p className="time-text">
                       {" "}
                       {` ${moment(tipDate).format("DD.MM.YYYY")}`}
                     </p>
                   </div>
                   <div className="flex">
-                    <img src="/icon.svg" alt="" />{" "}
+                    <img src="/icon.svg" alt="Time icon" />{" "}
                     <p className="time-text">
                       {timeRemaining
                         ? `${timeRemaining.days}d ${timeRemaining.hours}h ${timeRemaining.minutes}m`
@@ -124,7 +128,7 @@ const TipModal = ({
                               </a>
                             </div>
                             <div className="flex popup-text">
-                              <img src="/settings-01.png" alt="" />
+                              <img src="/settings-01.png" alt="Settings icon" />
                               <Link to={`/editTip/${_id}`}> Ažuriraj</Link>
                             </div>
                           </Popup>

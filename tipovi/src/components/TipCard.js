@@ -114,14 +114,14 @@ const TipCard = ({
       </MDBCardHeader>
       <MDBCardHeader className="flex-spaceB box-position">
         <div className="flex">
-          <img src="/calendar.svg" alt="" />
+          <img src="/calendar.svg" alt="Calendar icon" />
           <p className="time-text">
             {" "}
             {` ${moment(tipDate).format("DD.MM.YYYY")}`}
           </p>
         </div>
         <div className="flex">
-          <img src="/icon.svg" alt="" />
+          <img src="/Icon.svg" alt="Time icon" />
           <p className="time-text">
             {" "}
             {timeRemaining
@@ -135,13 +135,13 @@ const TipCard = ({
               <div ref={popupRef}>
                 <Popup>
                   <div className="flex popup-text">
-                    <img src="/user-01.png" alt="" />
+                    <img src="/user-01.png" alt="User icon" />
                     <a href="#" onClick={() => handleDelete(_id)}>
                       Izbriši
                     </a>
                   </div>
                   <div className="flex popup-text">
-                    <img src="/settings-01.png" alt="" />
+                    <img src="/settings-01.png" alt="Settings icon" />
                     <Link to={`/editTip/${_id}`}> Ažuriraj</Link>
                   </div>
                   {!isActive && user?.result?.role === "admin" && (
