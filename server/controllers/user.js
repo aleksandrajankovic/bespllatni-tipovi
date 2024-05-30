@@ -3,15 +3,16 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import UserModal from "../models/user.js";
 import dotenv from "dotenv";
+import sgMail from '@sendgrid/mail';
 dotenv.config();
 const secret = process.env.JWT_SECRET; // token
 
 const transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  host: "smtp.sendgrid.net",
+  port: 587,
   auth: {
-    user: "d6f04e9a8b65e0",
-    pass: "73ffbec161d0df",
+    user: "Besplatni Tipovi Mail API",
+    pass: "process.env.SENDGRID_API_KEY",
   },
 });
 
@@ -19,6 +20,8 @@ const generateVerificationToken = () => {
   const verificationToken = jwt.sign({}, secret, { expiresIn: "1h" });
   return verificationToken;
 };
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const signup = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
@@ -39,14 +42,15 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       name: `${firstName} ${lastName}`,
       role: "user",
-      status: "unverified", // Dodato polje za status naloga
-      verificationToken, // Dodato polje za token za verifikaciju
+      status: "unverified",
+      verificationToken,
     });
 
     const verificationLink = `https://besplatni-tipovi.vercel.app/verify/${verificationToken}`;
 
-    await transporter.sendMail({
+    await sgMail.send({
       to: email,
+      from: "aleksandra.bgd.87@gmail.com",
       subject: "Potvrdite svoj nalog",
       html: `Kliknite na <a href="${verificationLink}">ovaj link</a> da biste verifikovali svoj nalog.`,
     });
@@ -58,6 +62,7 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
 
 export const verifyAccount = async (req, res) => {
   const { token } = req.params;
