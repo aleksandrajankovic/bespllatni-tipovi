@@ -1,28 +1,26 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-//import nodemailer from "nodemailer";
+import nodemailer from "nodemailer";
 import UserModal from "../models/user.js";
 import dotenv from "dotenv";
-import sgMail from '@sendgrid/mail';
+
 dotenv.config();
+
 const secret = process.env.JWT_SECRET; // token
 
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.sendgrid.net",
-//   port: 587,
-//   auth: {
-//     user: "apikey",
-//     pass: "process.env.SENDGRID_API_KEY",
-//   },
-// });
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const transporter = nodemailer.createTransport({
+  host: "smtp.sendgrid.net",
+  port: 587,
+  auth: {
+    user: "apikey",
+    pass: process.env.SENDGRID_API_KEY,
+  },
+});
 
 const generateVerificationToken = () => {
   const verificationToken = jwt.sign({}, secret, { expiresIn: "1h" });
   return verificationToken;
 };
-
-
 
 export const signup = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
@@ -49,21 +47,27 @@ export const signup = async (req, res) => {
 
     const verificationLink = `https://besplatni-tipovi.vercel.app/verify/${verificationToken}`;
 
-    await sgMail.send({
-      to: email,
+    const mailOptions = {
       from: "aleksandra.bgd.87@gmail.com",
+      to: email,
       subject: "Potvrdite svoj nalog",
       html: `Kliknite na <a href="${verificationLink}">ovaj link</a> da biste verifikovali svoj nalog.`,
-    });
+    };
 
-    console.log("Signup success. Verification email sent.");
-    res.status(201).json({ result });
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending verification email:", error);
+        return res.status(500).json({ message: "Failed to send verification email" });
+      } else {
+        console.log("Signup success. Verification email sent:", info.response);
+        return res.status(201).json({ result });
+      }
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong" });
+    console.error("Error during signup:", error);
+    res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 };
-
 
 export const verifyAccount = async (req, res) => {
   const { token } = req.params;
@@ -79,14 +83,11 @@ export const verifyAccount = async (req, res) => {
       return res.status(404).json({ message: "Invalid verification token" });
     }
   } catch (error) {
-    console.error(error);
-    return res
-      .status(500)
-      .json({ message: "Error while updating user status" });
+    console.error("Error during verification:", error);
+    return res.status(500).json({ message: "Error while updating user status", error: error.message });
   }
 };
 
-/*LOGIN*/
 export const signin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -95,7 +96,6 @@ export const signin = async (req, res) => {
     if (!oldUser)
       return res.status(404).json({ message: "User doesn't exist" });
 
-    // Check if the user is verified
     if (oldUser.status !== "verified") {
       return res.status(403).json({ message: "User is not verified" });
     }
@@ -111,7 +111,7 @@ export const signin = async (req, res) => {
     console.log("Signin success. Token:", token);
     res.status(200).json({ result: oldUser, token });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
-    console.log(error);
+    console.error("Error during signin:", error);
+    res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 };
