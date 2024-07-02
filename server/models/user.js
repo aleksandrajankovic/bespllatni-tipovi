@@ -10,11 +10,14 @@ const userSchema = mongoose.Schema({
     type: String,
     enum: ["unverified", "verified"],
     default: "unverified",
+    
   },
   verificationToken: {
     type: String,
     default: null,
   },
-});
+  
+},
+{ timestamps: true } );
 
 export default mongoose.model("User", userSchema);
