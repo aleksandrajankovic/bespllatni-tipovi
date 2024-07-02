@@ -1,27 +1,28 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
+//import nodemailer from "nodemailer";
 import UserModal from "../models/user.js";
 import dotenv from "dotenv";
 import sgMail from '@sendgrid/mail';
 dotenv.config();
 const secret = process.env.JWT_SECRET; // token
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.sendgrid.net",
-  port: 587,
-  auth: {
-    user: "Besplatni Tipovi Mail API",
-    pass: "process.env.SENDGRID_API_KEY",
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.sendgrid.net",
+//   port: 587,
+//   auth: {
+//     user: "apikey",
+//     pass: "process.env.SENDGRID_API_KEY",
+//   },
+// });
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const generateVerificationToken = () => {
   const verificationToken = jwt.sign({}, secret, { expiresIn: "1h" });
   return verificationToken;
 };
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 
 export const signup = async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
