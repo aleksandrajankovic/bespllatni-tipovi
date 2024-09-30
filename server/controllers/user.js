@@ -8,6 +8,7 @@ dotenv.config();
 
 const secret = process.env.JWT_SECRET; // token
 
+//SendGrid 
 const transporter = nodemailer.createTransport({
   host: "smtp.sendgrid.net",
   port: 587,

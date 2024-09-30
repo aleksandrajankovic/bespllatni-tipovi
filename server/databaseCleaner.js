@@ -13,22 +13,21 @@ mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true
   .catch((error) => console.log("Error connecting to the database:", error));
 
 // Definisanje cron posla
-cron.schedule("*/2 * * * *", async () => { // Menja se "0 0 * * *" u "*/2 * * * *"
-    console.log("Running database cleaner");
-  
-    // Datum pre 2 minuta (za testiranje)
-    const twoMinutesAgo = new Date();
-    twoMinutesAgo.setMinutes(twoMinutesAgo.getMinutes() - 2); // Promeni na -2 minuta za testiranje
-  
-    try {
-      // Brisanje naloga koji nisu verifikovani i koji su kreirani pre više od 2 minuta
+cron.schedule("0 0 * * *", async () => {
+  console.log("Running database cleaner");
+
+  const oneDayAgo = new Date();
+  oneDayAgo.setHours(oneDayAgo.getHours() - 24); // Postavi na -24 sata za brisanje posle jednog dana
+
+  try {
       const result = await User.deleteMany({
-        status: "unverified",
-        createdAt: { $lt: twoMinutesAgo },
+          status: "unverified",
+          createdAt: { $lt: oneDayAgo },
       });
-  
+
       console.log(`${result.deletedCount} unverified accounts deleted.`);
-    } catch (error) {
+  } catch (error) {
       console.error("Error during database cleaning:", error);
-    }
-  });
+  }
+});
+

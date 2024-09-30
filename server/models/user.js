@@ -26,7 +26,7 @@ const userSchema = mongoose.Schema(
     },
     expireAt: {
       type: Date,
-      default: () => new Date(+new Date() + 2 * 60 * 1000), // Ističe za 2 minuta
+      default: () => new Date(+new Date() + 24 * 60 * 60 * 1000), // Ističe za 24 sata
     },
   },
   { timestamps: true }
@@ -35,4 +35,5 @@ const userSchema = mongoose.Schema(
 userSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model("User", userSchema);
+
 
